@@ -1,0 +1,30 @@
+# Author -- meevs
+# Creation Date -- 2023-06-24
+# File Name -- compose.yaml
+# Notes --
+
+version: "2.4"
+services:
+  default:
+    build:
+      context: "./"
+      args:
+        INSTALL_DIR: "${INSTALL_DIR}"
+        CONFIG_DIR: "${CONFIG_DIR}"
+        SERVER_NAME: "${SERVER_NAME}"
+        IMPORT_CONFIG_DIR: "/home/steam/.config/project_zomboid"
+    environment:
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+    image: "pz-${SERVER_NAME}-img"
+    container_name: "pz-${SERVER_NAME}"
+    stdin_open: "true"
+    tty: "true"
+    volumes:
+      - type: "volume"
+        source: "data"
+        target: "${INSTALL_DIR}"
+    ports:
+     - "16261-16262:16261-16262/udp"
+
+volumes:
+  data: {}
