@@ -10,7 +10,7 @@ services:
       context: "./"
       args:
         INSTALL_DIR: "${INSTALL_DIR}"
-        CONFIG_DIR: "${CONFIG_DIR}"
+        CONFIG: "${CONFIG}"
         SERVER_NAME: "${SERVER_NAME}"
         IMPORT_CONFIG_DIR: "/home/steam/.config/project_zomboid"
     environment:
