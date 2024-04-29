@@ -1,0 +1,38 @@
+#! /bin/bash
+# Author -- meevs
+# Creation Date -- 2024-04-24
+# File Name -- init_pz_server
+# Notes --
+
+SERVER_ID="380870"
+MOD_LIST="./mod_list.json"
+
+
+if [[ -f "${MOD_LIST}" && -r "${STEAM_WORKSHOP_HELPER_FUNCTIONS}" ]] then
+	
+	source "${STEAM_WORKSHOP_HELPER_FUNCTIONS}"
+	export MOD_IDS=$(parse_mod_ids "${MOD_LIST}" ";")
+	export MOD_NAMES=$(parse_mod_names "${MOD_LIST}" ";")
+
+	echo ""
+	echo -e "\e[38;2;0;128;0mUpdating server...\e[0m"
+	steamcmd +force_install_dir "${PWD}" +login anonymous +app_update "${SERVER_ID}" +quit
+	echo -e "\e[38;2;0;128;0mServer has been updated!\e[0m"
+	echo ""
+
+	echo -e "\e[38;2;0;128;0mAppending mods...\e[0m"		
+	CONFIG=$(add_mods.awk "${ZOMBOID_SERVER_CFG_DIR}/${SERVER_NAME}.ini")
+	echo "${CONFIG}" > "${ZOMBOID_SERVER_CFG_DIR}/${SERVER_NAME}.ini"
+	echo -e "\e[38;2;0;128;0mMods Loaded\e[0m"
+	echo ""
+
+elif [[ ! -f "${MOD_LIST}" ]] then
+	echo -e "\e[38;2;255;255;0mNo mod list provided\e[0m"
+elif [[ ! -r "${STEAM_WORKSHOP_HELPER_FUNCTIONS}" ]] then
+	echo -e "\e[38;2;255;0;0mCould not load workshop helper functions! No mods can be loaded!\e[0m"
+fi
+
+echo ""
+echo -e "\e[38;2;0;255;0mStarting server...\e[0m"
+"./start-server.sh" -servername "${SERVER_NAME}" -adminpassword "${ADMIN_PASSWORD}"
+echo ""
